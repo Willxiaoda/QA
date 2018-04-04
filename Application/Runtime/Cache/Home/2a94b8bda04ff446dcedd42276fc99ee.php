@@ -1,0 +1,712 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- favicon icon -->
+	<link rel="shortcut icon" href="/QA/Public/img/favicon.ico" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>你是华广的吃货吗</title>
+	<link rel="stylesheet" type="text/css" href="/QA/Public/css/swiper.min.css" />
+	<link rel="stylesheet" type="text/css" href="/QA/Public/css/animate.min.css" />
+	<!-- radio 样式 -->
+	<link rel="stylesheet" type="text/css" href="/QA/Public/css/magic-check.css" />
+	<style type="text/css">
+		html,body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,label,dl,dt,dd,fieldset,img,hr{
+			margin: 0;
+			padding: 0;
+			border: 0;
+		}
+		html,
+		body{
+			height: auto;
+		}
+		/*第一页*/
+		#conbg{
+			font-family: '微软雅黑';
+			color: #007eff;
+		}
+		#conbg #title{
+			margin: 2vh 0 0 0;
+
+		}
+		#conbg .swiper-slide .question{
+			text-align: center;
+		}
+		#conbg .swiper-slide .imgFood{
+			width: 6rem;
+			margin-top: 0.5vh;
+		}
+		#conbg .swiper-slide .answer{
+			font-size: 0;
+			text-align: left;
+			margin: 1.5vh auto 0;
+		}
+		#conbg .swiper-slide .answer p{
+			margin-bottom: 1vh;
+		}
+		/*单选框*/
+		label {font-size:0.5rem;cursor:pointer;line-height: 0.9rem;}
+		label i {font-size:0.5rem;font-style:normal;display:inline-block;width:0.5rem;height:0.5rem;text-align:center;line-height:0.45rem;color:transparent;vertical-align:middle;margin:0 0.2rem 0.1rem 0;border:#2489c5 0.05rem solid;}
+		input[type="checkbox"],input[type="radio"] {display:none;}
+		input[type="radio"] + i {border-radius:0.5rem;}
+		input[type="checkbox"]:checked + i,input[type="radio"]:checked + i {background:#2489c5;color:#fff;}
+		/*分享*/
+		.wantPlay,
+		.shareTo,
+		.question button {
+			font-family: '微软雅黑';
+			width: 40vw;
+			height: 1.2rem;
+			margin-top: 3vh;
+			/*float: left;*/
+			font-size: 0.4rem;
+			border:none;
+			text-align: center;
+			/*line-height: 0.4rem;*/
+			border-radius: 0.2rem;
+			visibility: visible;
+			-webkit-appearance : none ;  /*解决iphone safari上的圆角问题*/
+
+		}
+		/*答题区*/
+		.wantPlay,
+		.shareTo,
+		.question button:nth-of-type(1) {
+			background: #fcb95a;
+			color: #FFF;
+			margin-bottom: 0.8rem;
+		}
+
+		/*遮罩层*/
+		.mask {
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.8);
+			position: fixed;
+			z-index: 99;
+			top: 0vw;
+			display: none;
+		}
+		.tishi {
+			width: 70%;
+			height: 50vw;
+			background: url(/QA/Public/img/mxz_ts.png) center no-repeat;
+			/*float: left;*/
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			background-size: 100% auto;
+			margin-left: -35%;
+			margin-top: -25vw;
+		}
+		.qd {
+			width: 50%;
+			height: 10vw;
+			margin: 30vw 25% 0 25%;
+		}
+		/*结果页*/
+		#result{
+			margin: 3vh auto 0;
+		}
+		#result p{
+			margin-bottom: 1vh;
+		}
+		/*活动*/
+		.moreInfo{
+			margin-top: 3vh;
+			text-align: center;;
+			font-size: 0.4rem;
+		}
+
+		/*点击分享*/
+		.share {
+		    width: 90%;
+		    height: auto;
+		    margin: 0 5%;
+		}
+
+		.share img {
+		    width: 100%;
+		    height: auto;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="swiper-container" id="conbg">
+		<div class="swiper-wrapper">
+		        <!-- 首页 -->
+		        <!-- <div class="swiper-slide swiper-no-swiping" style="text-align:center">
+		        	<p class="ani" style="font-size:0.6rem;margin-top:6vh" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s" />你是华广的“吃货”吗？</p>
+		        	<img class="ani" src="/QA/Public/img/title.png" id="title" swiper-animate-effect="swing" swiper-animate-duration="0.5s" swiper-animate-delay="1s" />
+		        	<img class="ani" src="/QA/Public/img/logo.png" style="width:5rem;margin-top:3vh" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="1.5s"/>
+		        	<img class="ani" id="linkTo" src="/QA/Public/img/button.png" style="display:block;margin:6vh auto 0;width:5rem" swiper-animate-effect="rollIn" swiper-animate-duration="1.5s" swiper-animate-delay="2s" />
+		        	<p style="font-size: 0.3rem;margin:7vh 0 3vh 0">星空学生创新中心丨Copyright©2017</p>
+		        </div> -->
+		        <!-- 答题选项动态添加模板  勿删-->
+		        <!-- <div class="swiper-slide swiper-no-swiping">
+				<img class="ani" src="/QA/Public/img/logo.png" style="width:1.5rem;margin:3vh 0 0 4vw" />
+				<div style="width:70vw;float:right;margin-top:8vh;font-size:0.5rem;border-top:0.01rem solid #aaaaaa">华广吃货大作战 <span>1/10</span></div>
+				<div class="question">
+				<img src="/QA/Public/img/food/1.jpg" class="ani imgFood" swiper-animate-effect="flipInY" swiper-animate-duration="1s" swiper-animate-delay="0.2s" />
+				<div class="ani answer" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="0.5s">
+					<p style="font-size:0.5rem"><span>1.</span>猜猜这是一饭的什么扒饭</p>
+					<label><input type="radio" name="t1" value="t1-1" /><i>√</i>香煎鸡扒</label><br/>
+					<label><input type="radio" name="t1" value="t1-2" /><i>√</i>香煎猪扒</label><br/>
+					<label><input type="radio" name="t1" value="t1-3" /><i>√</i>孜然鸡扒</label><br/>
+					<label><input type="radio" name="t1" value="t1-4" /><i>√</i>孜然猪扒</label>
+				</div>
+				<div class="btn">
+           					<button type="button"class="ani next" swiper-animate-effect="rotateInUpLeft" swiper-animate-duration="1s" swiper-animate-delay="1s">下一题</button>
+				</div>
+			</div>
+		        </div> -->
+		        <!-- 最后一页模板 -->
+		       <!--  <div class="swiper-slide swiper-no-swiping" style="text-align:center"> -->
+		       <!--  	<img class="ani" src="/QA/Public/img/logo.png" style="width:3rem;margin-top:10vh" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="0.2s"/>
+		        	<div id="result">
+		        		<p class="ani" style="font-size:0.5rem" swiper-animate-effect="bounceInDown" swiper-animate-duration="1s" swiper-animate-delay="0.8s" />恭喜你成为<i style="color:red;font-size:0.7rem;font-style:normal">"吃货盟主"</i></p>
+			        	<p class="ani" style="font-size:0.5rem;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="1.8s" />榜中不分地域，您答对9-12题</p>
+			        	<p class="ani" style="font-size:0.5rem;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="2.8s" />已被敬仰尊为大胃王，人见人恐，实乃吃货界极品</p>
+		        	</div>
+		        	<div class="ani moreInfo" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="3.5s">
+		        		<p>18-25号，图书馆门口线下摆摊</p>
+		        		<p>更多好玩，尽在星空</p>
+		        	</div>
+		        	<div class="ani btn" style="margin-top:5vh;" swiper-animate-effect="rotateInUpLeft" swiper-animate-duration="1s" swiper-animate-delay="4s">
+           					<button type="button"class="share" >分享</button>
+				</div>
+		        	<p style="font-size: 0.3rem;margin:7vh 0 5vh 0">星空学生创新中心丨Copyright©2017</p>
+		        </div>
+    		</div> -->
+	</div>
+	<!--提示遮罩层-->
+	<div class="mask">
+		<div class="tishi">
+			<div class="qd"></div>
+		</div>
+	</div>
+	<script src="/QA/Public/js/jquery.js" /></script>
+	<script src="/QA/Public/js/swiper.jquery.min.js" /></script>
+	<script src="/QA/Public/js/swiper.animate.min.js"></script>
+</body>
+<script type="text/javascript">	
+	// json数据
+	var data = {
+		"img":[
+			"/QA/Public/img/food/1.jpg",
+			"/QA/Public/img/food/2.jpg",
+			"/QA/Public/img/food/3.jpg",
+			"/QA/Public/img/food/4.jpg",
+			"/QA/Public/img/food/5.jpg",
+			"/QA/Public/img/food/6.jpg",
+			"/QA/Public/img/food/7.jpg",
+			"/QA/Public/img/food/8.jpg",
+			"/QA/Public/img/food/9.jpg",
+			"/QA/Public/img/food/10.jpg",
+			"/QA/Public/img/food/11.jpg",
+			"/QA/Public/img/food/12.jpg",
+			"/QA/Public/img/food/13.jpg",
+			"/QA/Public/img/food/14.jpg",
+			"/QA/Public/img/food/15.jpg",
+			"/QA/Public/img/food/16.jpg",
+			"/QA/Public/img/food/17.jpg",
+			"/QA/Public/img/food/18.jpg",
+			"/QA/Public/img/food/19.jpg",
+			"/QA/Public/img/food/20.jpg",
+			"/QA/Public/img/food/21.jpg"
+		],
+		// 问题
+		"que":[{
+			// 标题
+			"tt":"哪个饭堂没有麻辣烫",
+			// 选项
+			"ans":[
+				"一饭",
+				"二饭",
+				"三饭",
+				"四饭"
+			],
+			// 正确答案
+			"trueAns":"t1-1"
+		},
+		{
+			"tt":"你知道图中是几饭的美食吗",
+			"ans":[
+				"一饭",
+				"二饭",
+				"三饭",
+				"四饭"
+			],
+			// 正确答案
+			"trueAns":"t2-3"
+		},
+		{
+			"tt":"请问图中的美食叫什么名字",
+			"ans":[
+				"石锅啤酒鸭拌饭",
+				"石锅猪扒拌饭",
+				"石锅鸡扒拌饭",
+				"美味香锅"
+			],
+			// 正确答案
+			"trueAns":"t3-3"
+		},
+		{
+			"tt":"下图中哪道美食来自三饭",
+			"ans":[
+				"图一",
+				"图二（右上）",
+				"图三（左下）",
+				"图四 "
+			],
+			// 正确答案
+			"trueAns":"t4-4"
+		},
+		{
+			"tt":"图中的窝蛋牛肉饭是来自",
+			"ans":[
+				"一饭",
+				"二饭",
+				"三饭",
+				"四饭",
+				"圣菲亚西餐厅"
+			],
+			// 正确答案
+			"trueAns":"t5-5"
+		},
+		{
+			"tt":"猜猜这是一饭的什么扒饭",
+			"ans":[
+				"香煎鸡扒",
+				"香煎猪扒",
+				"孜然鸡扒",
+				"孜然猪扒"
+			],
+			// 正确答案
+			"trueAns":"t6-3"
+		},
+		{
+			"tt":"二饭的铁板猪扒饭的正确吃法",
+			"ans":[
+				"先吃饭后吃肉",
+				"先吃肉后吃饭",
+				"把铁板里的黑椒汁一滴不剩的全拌在饭里进食",
+				"随意，开心就好"
+			],
+			// 正确答案
+			"trueAns":"t7-3"
+		},
+		{
+			"tt":"三饭手撕鸡一般会加什么配料",
+			"ans":[
+				"香菜、葱",
+				"葱、蒜头",
+				"香菜、蒜头",
+				"香菜、芝麻"
+			],
+			// 正确答案
+			"trueAns":"t8-4"
+		},
+		{
+			"tt":"这道菜是出自哪里的",
+			"ans":[
+				"三饭友粉有面",
+				"二饭兰州拉面",
+				"校门口老北京炸酱面",
+				"龙记桂林米粉"
+			],
+			// 正确答案
+			"trueAns":"t9-3"
+		},
+		{
+			"tt":"二饭的五谷渔粉有几种颜色",
+			"ans":[
+				"2",
+				"3",
+				"4",
+				"5"
+			],
+			// 正确答案
+			"trueAns":"t10-2"
+		},
+		{
+			"tt":"华广所有饭堂共有几家滑蛋",
+			"ans":[
+				"2",
+				"3",
+				"4",
+				"5"
+			],
+			// 正确答案
+			"trueAns":"t11-3"
+		},
+		{
+			"tt":"下面哪一项不是四饭兰州拉面的菜单选项",
+			"ans":[
+				"孜然炒肉",
+				"猪肉拉面",
+				"羊肉拉面",
+				"牛肉拉面"
+			],
+			// 正确答案
+			"trueAns":"t12-2"
+		},
+		{
+			"tt":"图美食青椒肉丝炒饭是出自三饭的哪个档口呢",
+			"ans":[
+				"咕谷扒饭",
+				"江南风味",
+				"潮汕美食",
+				"风味小炒"
+			],
+			// 正确答案
+			"trueAns":"t13-2"
+		},
+		{
+			"tt":"图中美味的黑森林蛋糕来自商业街哪个商家",
+			"ans":[
+				"斐丽轩烘培坊",
+				"幸福西饼",
+				"美佳乐",
+				"星奇异"
+			],
+			// 正确答案
+			"trueAns":"t14-4"
+		},
+		{
+			"tt":"图中的美食在校外的味在骨头汤里有几种麻辣程度",
+			"ans":[
+				"2",
+				"3",
+				"4",
+				"5"
+			],
+			// 正确答案
+			"trueAns":"t15-2"
+		},
+		{
+			"tt":"图中焗饭来自校外的哪个商家",
+			"ans":[
+				"乐驿美食",
+				"巴萨克披萨店",
+				"GOODTIME家庭牛排",
+				"茶唛西餐"
+			],
+			// 正确答案
+			"trueAns":"t16-2"
+		},
+		{
+			"tt":"图中的鸡扒饭能配哪些酱料",
+			"ans":[
+				"咖喱、黑椒、番茄、蘑菇",
+				"咖喱、黑椒、辣椒、蘑菇",
+				"沙拉、黑椒、番茄、蘑菇",
+				"咖喱、黑椒、番茄、芝士"
+			],
+			// 正确答案
+			"trueAns":"t17-1"
+		},
+		{
+			"tt":"图中来自二饭的美食叫什么",
+			"ans":[
+				"蛋包饭",
+				"火腿蛋饭",
+				"荷包饭",
+				"滑蛋火腿饭"
+			],
+			// 正确答案
+			"trueAns":"t18-4"
+		},
+		{
+			"tt":"魔饭先生的热销外卖是什么",
+			"ans":[
+				"沙拉烤肉饭",
+				"沙拉脆皮鸡",
+				"蜜汁烤肉饭",
+				"孜然烤肉饭"
+			],
+			// 正确答案
+			"trueAns":"t19-1"
+		},
+		{
+			"tt":"星奇异的“十元三个的甜甜圈” 分别是什么口味",
+			"ans":[
+				"绿茶 巧克力 牛奶",
+				"牛奶 草莓 抹茶",
+				"抹茶 牛奶 巧克力",
+				"巧克力 草莓 抹茶"
+			],
+			// 正确答案
+			"trueAns":"t20-4"
+		},
+		{
+			"tt":"下列哪种材料未在巴萨克披萨店的披萨出现过的",
+			"ans":[
+				"金枪鱼",
+				"薯蓉",
+				"鳗鱼",
+				"香蕉"
+			],
+			// 正确答案
+			"trueAns":"t21-2"
+		},
+		],
+	};
+	var obj = new Object;
+	obj.strT = "";
+	obj.strN = "";
+	obj.strW = "";
+	//输出结果
+	var putResult = function(trueT,obj){
+		//对的题目
+		// var trueT = data.que.length-falseT;
+		if(trueT  == 0){
+			obj.strT = "火星人";
+			obj.strN ="答对0题，你已脱离红尘。";
+			obj.strW = "地球已经阻止不了您的强悍了，您快回火星上去吧！";
+		}
+		else if(trueT>=1 && trueT<=4){
+			obj.strT = "吃货小达人";
+			obj.strN ="榜中不分地域，答对" + trueT + "题";
+			obj.strW = "初入吃货界，功力尚浅";
+		}
+		else if(trueT>=5 && trueT<=7){
+			obj.strT = "吃货童姥";
+			obj.strN ="榜中不分地域，答对" + trueT + "题";
+			obj.strW = "对“吃”基本入门，但尚没有发展到主动猎取的地步";
+		}
+		else if(trueT>=8 && trueT<=9){
+			obj.strT = "吃货盟主";
+			obj.strN ="榜中不分地域，答对" + trueT + "题";
+			obj.strW = "已被敬仰尊为大胃王，人见人恐，实乃吃货界极品";
+		}
+		else if(trueT == 10){
+			obj.strT = "至尊吃货掌门";
+			obj.strN ="榜中不分地域，答对" + trueT + "题";
+			obj.strW = "恭喜了食神成就非凡，一人之下，万人之上！";
+		}
+
+		
+	}
+	//做错的题
+	var falseT = 0;
+	//设备可视宽度
+	var deviceW = window.innerWidth;
+	//设备可视高度
+	var deviceH = window.innerHeight;
+	//设置rem的根元素单位参考
+	document.documentElement.style.fontSize = (deviceW/10) + 'px';
+	//记录随机数的数组
+	var array = new Array();
+	//生成随机数函数
+	// 循环N次生成随机数
+	for(var i = 0 ; ; i++){
+    	// 只生成10个随机数
+    		if(array.length<10){
+          			generateRandom();
+   		}else{
+      			break;
+  		}
+	}
+	// 生成随机数的方法
+	function generateRandom(){
+     		var rand = parseInt(Math.random()*data.que.length);
+     		for(var i = 0 ; i < array.length; i++){
+          			if(array[i] == rand){
+              			return false;
+          			}
+     		}
+     		array.push(rand);
+	}
+	var num="<?php echo ($num); ?>";
+	if(num!=""){
+	     $('.swiper-wrapper').append('<div class="swiper-slide swiper-no-swiping" id="lastPage" style="text-align:center"></div>');
+	     $('#lastPage').append('<img class="ani" src="/QA/Public/img/logo.png" style="width:3rem;margin-top:6vh" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="0.2s"/><div id="result"></div><div class="ani moreInfo" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="3.5s"><p>18-25号，图书馆门口线下摆摊</p><p>更多好玩，尽在星空</p></div><div class="ani btn" style="margin-top:3vh;" swiper-animate-effect="rotateInUpLeft" swiper-animate-duration="1s" swiper-animate-delay="4s"><button type="button" class="wantPlay" >我要挑战</button></div><p style="font-size: 0.3rem;margin:5vh 0 3vh 0">星空学生创新中心丨Copyright©2017</p>');
+		//添加鉴定内容
+		$('#result').append('<p class="ani" style="font-size:0.5rem" swiper-animate-effect="bounceInDown" swiper-animate-duration="1s" swiper-animate-delay="0.8s">您的朋友获得称号<i id="st" style="color:red;font-size:0.7rem;font-style:normal"></i></p><p id="sn" class="ani" style="font-size:0.5rem;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="1.8s"></p><p id="sw" class="ani" style="font-size:0.5rem;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="2.8s"></p>');
+		putResult(num,obj);
+		$('#result #st').html(obj.strT);
+		$('#result #sn').html(obj.strN);
+		$('#result #sw').html(obj.strW);
+		//点击我也要玩
+		$("title").html('我在华广吃货大作战中获得称号:' + obj.strT + ',你要来挑战我吗~ '); 
+		$('.wantPlay').click(function(){
+			window.location.href = 'http://question.xingkong.us';
+		});
+
+	}else{
+		//加载题目
+		var fatheCon = $('.swiper-wrapper');
+        fatheCon.append('<div class="swiper-slide swiper-no-swiping" style="text-align:center"><p class="ani" style="font-size:0.6rem;margin-top:6vh" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s">你是华广的“吃货”吗？</p><img class="ani" src="/QA/Public/img/title.png" id="title" swiper-animate-effect="swing" swiper-animate-duration="0.5s" swiper-animate-delay="1s" /><img class="ani" src="/QA/Public/img/logo.png" style="width:5rem;margin-top:3vh" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="1.5s"/><img class="ani" id="linkTo" src="/QA/Public/img/button.png" style="display:block;margin:6vh auto 0;width:5rem" swiper-animate-effect="rollIn" swiper-animate-duration="1.5s" swiper-animate-delay="2s" /><p style="font-size: 0.3rem;margin:7vh 0 3vh 0">星空学生创新中心丨Copyright©2017</p></div>');
+		for(var i = 0;i<10;i++){
+			// 以下动态添加可参考html中的模板
+			// 添加父容器
+			fatheCon.append('<div class="swiper-slide swiper-no-swiping add"></div>');
+			$('.add').eq(i).append('<img class="ani" src="/QA/Public/img/logo.png" style="width:1.5rem;margin:2.5vh 0 0 4vw" /><div style="width:77vw;float:right;margin-top:5.5vh;font-size:0.5rem;border-top:0.01rem solid #aaaaaa">华广吃货大作战 <span>' + (i+1)+'/'+10 + '</span></div><div class="question"></div>');
+			// //加载问题
+			$('.question').eq(i).append('<img src='+data.img[array[i]] + ' class="ani imgFood" swiper-animate-effect="flipInY" swiper-animate-duration="1s" swiper-animate-delay="0.2s" /><div class="ani answer" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="0.5s"></div><div class="btn"><button type="button"class="ani next" swiper-animate-effect="rotateInUpLeft" swiper-animate-duration="0.6s" swiper-animate-delay="1.3s">下一题</button></div>');
+			// // 加载标题
+			$('.answer').eq(i).append('<p style="font-size:0.5rem">'+(i+1)+'、'+ data.que[array[i]].tt+'</p>');
+			// //添加选项
+			for(var j=0;j<data.que[array[i]].ans.length;j++){
+				$('.answer').eq(i).append('<label><input type="radio" name="t'+ (array[i]+1)+'" value="t'+(array[i]+1)+'-'+(j+1) +'" /><i>v</i>'+ data.que[array[i]].ans[j] +'</label><br/>');
+			}
+		}//for循坏end
+		//把最后一个下一题改成完成作战
+		$('.next').eq(10-1).html('完成作战');
+		//添加最后一页
+		fatheCon.append('<div class="swiper-slide swiper-no-swiping" id="lastPage" style="text-align:center"></div>');
+		//最后一页主内容
+		$('#lastPage').append('<img class="ani" src="/QA/Public/img/logo.png" style="width:3rem;margin-top:6vh" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="0.2s"/><div id="result"></div><div class="ani moreInfo" swiper-animate-effect="bounceInUp" swiper-animate-duration="1s" swiper-animate-delay="3.5s"><p>18-25号，图书馆门口线下摆摊</p><p>更多好玩，尽在星空</p></div><div class="ani btn" style="margin-top:3vh;" swiper-animate-effect="rotateInUpLeft" swiper-animate-duration="1s" swiper-animate-delay="4s"><button type="button" class="shareTo" >分享</button></div><p style="font-size: 0.3rem;margin:5vh 0 3vh 0">星空学生创新中心丨Copyright©2017</p>');
+		//添加鉴定内容
+		$('#result').append('<p class="ani" style="font-size:0.5rem" swiper-animate-effect="bounceInDown" swiper-animate-duration="1s" swiper-animate-delay="0.8s">恭喜你成为<i id="st" style="color:red;font-size:0.7rem;font-style:normal"></i></p><p id="sn" class="ani" style="font-size:0.5rem;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="1.8s"></p><p id="sw" class="ani" style="font-size:0.5rem;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="2.8s"></p>');
+		
+	}	//elese end
+	//样式设置自执行匿名函数
+	!function(){
+		$('.swiper-container').css('min-height',deviceH + 'px');
+		// 首页样式
+		$('#conbg').css({
+			'width' : deviceW + 'px',
+			'background' : 'url(/QA/Public/img/bg.png)',
+			'backgroundSize' : deviceW + 'px'
+		});
+		// 首页标题 "你是华广的吃货吗"
+		$('#title').css({
+			'width' : deviceW-(deviceW/6) + 'px',
+		});
+		// 提问及选项区域
+		$('.answer').css({
+			'width' : deviceW-(deviceW/4) + 'px',
+		});
+		//最后一页结果
+		$('#result').css({
+			'width' : deviceW-(deviceW/6) + 'px',
+		});
+	}();
+	// swiper.js 插件对象
+	var mySwiper = new Swiper('.swiper-container',{
+		//动画初始化
+		onInit: function(swiper){ //Swiper2.x的初始化是onFirstInit
+			swiperAnimateCache(swiper); //隐藏动画元素
+			swiperAnimate(swiper); //初始化完成开始动画
+		},
+		onSlideChangeEnd: function(swiper){
+			swiperAnimate(swiper); //每个slide切换结束时也运行当前slide动画
+		}
+	});
+	// mySwiper.lockSwipes();
+	//跳到下一个 首页开始测试的跳转
+	$('#linkTo').click(function(){
+		mySwiper.slideNext();
+	});
+	//回答回空是 点击确定关闭遮罩层
+	$(".qd").click(function(){
+		$(".mask").fadeOut(500);
+	});
+	//答题图片点击放大
+	$('.imgFood').toggle(function(){
+		$(this).css({
+			'width':(deviceW-deviceW/6) + 'px',
+			'transition': 'width 1s',
+			'-moz-transition': 'width 1s',/* Firefox 4 */
+			'-webkit-transition': 'width 1s',/* Safari 和 Chrome */
+			'-o-transition': 'width 1s', /* Opera */
+		});
+	},function(){
+		$(this).css('width','6rem');
+	});
+	//记录错题的数组
+	var falesArr=[0,0,0,0,0,0,0,0,0,0];
+	// index==9时是否执行
+	var flag = 0; 
+	//此函数是点击下一题的判断函数
+	$('.next').each(function(index){
+		//是否做错
+		//是否执行过
+		$(this).click(function(){
+			var isFalese = false;
+ 			var coutNum = 0;
+ 			// console.log("判断前" +isFalese);
+			//假如用户没有选择答案
+			if($(this).parent().prev().find($("input[type=radio]:checked")).length == 0){
+				//被执行了
+				flag=1;
+ 				$(".mask").fadeIn(500);
+ 			}
+ 			//用户选错答案 把当前改为红× 把对的选上
+ 			else if($(this).parent().prev().find($("input[type=radio]:checked")).val() != data.que[array[index]].trueAns){
+ 				// data.score[index] = 0;
+ 				//做错了
+ 				isFalese = true;
+ 				falesArr[index] = 1;
+ 				$(this).parent().prev().find($("input[type=radio]:checked")).next('i').text('×').css({
+					background:'#F91717',
+					color:'#fff'
+				});
+				$(this).parent().prev().find($("input[value=" + data.que[array[index]].trueAns +"]")).attr('checked','checked');
+ 			}
+ 			// 回答正确进入下一题 同时把数组置1
+ 			else{
+ 				// console.log("错的"+falseT);
+ 				mySwiper.slideNext();
+
+ 			}
+ 			if(index == 10-1&&flag==0){
+ 				flag = 1;
+ 				// console.log("我执行到这里了" + falseT);
+ 				for(var k = 0;k<falesArr.length;k++){
+ 					if (falesArr[k] == 1) {
+ 						falseT++;
+ 						// console.log(falseT);
+ 					}
+ 					// console.log(falesArr);
+ 				}
+ 				// console.log('数组统计的错题' + falseT);
+ 					        	putResult(10-falseT,obj);
+ 				$('#result #st').html(obj.strT);
+				$('#result #sn').html(obj.strN);
+				$('#result #sw').html(obj.strW);
+ 				finnish(10-falseT);
+ 			}
+		});
+	});
+
+	//点击分享
+	$('.shareTo').click(function(){
+		$('.mask').html('<div class="share"><img src="/QA/Public/img/share_t.png" /></div>');
+		$(".mask").fadeIn(500);
+	});
+	$('.mask').click(function(){
+		$(".mask").fadeOut(500);
+	});
+
+	//完成提交方法
+	function finnish(num){
+		$.ajax({
+	        url: "<?php echo U('home/index/addData');?>", // 跳转到 action
+	        type: 'post',
+	        data: {
+	            'num':num,//答对数
+	        },
+	        dataType: 'json',
+	        success: function (data) {
+	        	//改变当前url
+	        	changeURL(data.id);
+	        	$("title").html('我在华广吃货大作战中获得称号:' + obj.strT + ',你要来挑战我吗~ '); 
+
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        }
+    	});
+	}
+
+	//改鬓当前url方法
+	function changeURL(id){
+            window.history.pushState({},0,'http://question.xingkong.us/index.php/home/index/index/id/'+id);      
+    }
+
+
+</script>
+</html>
